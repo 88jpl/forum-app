@@ -8,7 +8,24 @@
     <title>Forum App JPL</title>
 </head>
 <body>
-    
+    <div id="app" style="text-align: center">
+        <!-- login with exsisting account -->
+        <h1>Login Form</h1>
+        
+        <input placeholder="Username/Email" v-model="loginEmailInput"><br>
+        <input placeholder="Password" v-model="loginPasswordInput" type="password"><br>
+        <button v-on:click="postSession()">Attempt Login</button><br>
+
+        <!-- creating new account -->
+        <h1>Registration Form</h1>
+        <input placeholder="Full Name" v-model="newNameInput"><br>
+        <input placeholder="Username/Email" v-model="newEmailInput"><br>
+        <input placeholder="Password" v-model="newPasswordInput" type="password"><br>
+        <button v-on:click="postUser()">Attempt Login</button>
+
+
+
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script src="app.js"></script>
 </body>
