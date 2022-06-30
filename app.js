@@ -1,9 +1,21 @@
 const URL = "https://forum2022.codeschool.cloud"
+Vue.component("loginpage", {
+    template: `
+   
+    `,
+    props: [
+
+    ],
+    methods: {
+
+    }
+});
 
 
 var app = new Vue({
     el: "#app",
     data: {
+        page: "login",
         loginEmailInput: "",
         loginPasswordInput: "",
 
