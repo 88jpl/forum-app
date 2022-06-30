@@ -16,6 +16,8 @@ var app = new Vue({
     el: "#app",
     data: {
         page: "login",
+        loggedIn: false,
+        registration: false,
         loginEmailInput: "",
         loginPasswordInput: "",
 
@@ -25,6 +27,20 @@ var app = new Vue({
 
     },
     methods: {
+
+        createUserPage: function() {
+            this.registration = true;
+        },
+        logStatus: function () {
+            if (this.getSession() == "logged in") {
+                
+            } else {
+                
+            }
+        },
+        logOut: function () {
+            this.loggedIn = false
+        },
         // Get /session - Ask the server if we are logged in
         getSession: async function () {
             let response = await fetch(`${URL}/session`,{
@@ -37,13 +53,16 @@ var app = new Vue({
                 console.log("logged in");
                 let data = await response.json();
                 console.log(data);
+                this.loggedIn = true;
             } else if (response.status == 401) {
                 //not logged in
                 console.log("not logged in");
                 let data = await response.json();
                 console.log(data);
+                this.loggedIn = false;
             } else {
                 console.log("Some sort of error when GETTING /session:", response.status, response);
+                this.loggedIn = false;
             }
         },
         // POST /session - Attempt to login
@@ -70,6 +89,7 @@ var app = new Vue({
                 //clear inputs
                 this.loginEmailInput = "";
                 this.loginPasswordInput = "";
+                this.loggedIn = false;
             } else if (response.status == 401) {
                 console.log("Unsuccessful Login Attempt");
 
@@ -83,6 +103,9 @@ var app = new Vue({
             } else {
                 console.log("Some sort of error when POSTING /session:", response.status, response);
             }
+
+            
+
         },
         postUser: async function () {
             let userCredentials = {
@@ -115,10 +138,13 @@ var app = new Vue({
             } else {
                 console.log("Some sort of error when creating", response.status, response);
             }
-        }
+            this.registration = false;
+        },
+
         // POST /user - create new user
     },
     created: function () {
         this.getSession();
+        this.logStatus();
     }
 })

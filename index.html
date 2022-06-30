@@ -10,18 +10,27 @@
 <body>
     <div id="app" style="text-align: center">
         <!-- login with exsisting account -->
-        <h1>Login Form</h1>
-        
-        <input placeholder="Username/Email" v-model="loginEmailInput"><br>
-        <input placeholder="Password" v-model="loginPasswordInput" type="password"><br>
-        <button v-on:click="postSession()">Attempt Login</button><br>
+        <div v-if="this.loggedIn == false">
+            <h1>Login</h1>
+            
+            <input placeholder="Username/Email" v-model="loginEmailInput"><br>
+            <input placeholder="Password" v-model="loginPasswordInput" type="password"><br>
+            <button v-on:click="postSession()">Login</button>
+            <button v-on:click="createUserPage">Create Login</button><br>
+        </div>
+        <div v-if="this.loggedIn == true">
+            {{this.loginEmailInput}}
+            <button v-on:click="logOut()">Logout</button>
+        </div>
 
         <!-- creating new account -->
-        <h1>Registration Form</h1>
-        <input placeholder="Full Name" v-model="newNameInput"><br>
-        <input placeholder="Username/Email" v-model="newEmailInput"><br>
-        <input placeholder="Password" v-model="newPasswordInput" type="password"><br>
-        <button v-on:click="postUser()">Attempt Login</button>
+        <div v-if="this.registration">
+            <h1>Create New User</h1>
+            <input placeholder="Full Name" v-model="newNameInput"><br>
+            <input placeholder="Username/Email" v-model="newEmailInput"><br>
+            <input placeholder="Password" v-model="newPasswordInput" type="password"><br>
+            <button v-on:click="postUser()">Create Login</button>
+        </div>
 
 
 
