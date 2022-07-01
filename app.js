@@ -1,14 +1,60 @@
 const URL = "https://forum2022.codeschool.cloud"
-Vue.component("loginpage", {
+Vue.component("homepage", {
     template: `
+        <div>
+            <h2 v-on:click="getThread($event.target.value)">{{title}}</h2>
+            <p>{{description}}</p>
+        </div>
    
+        
     `,
     props: [
-
+        "title",
+        "description",
+        "index",
+        "idofthread",
+        "page"
     ],
     methods: {
+         // GET selected thread by index from threads Array
+         getThread: async function(index) {
+            let threadID = this.idofthread;
+            let response = await fetch(`${URL}/thread/${threadID}`,{
+                method: "GET",
+                credentials: "include"
+            });
+            let data = await response.json();
+            // this.page = "thread"
+            console.log(data);
+            this.page = "thread";
+            
+        },
+        updatePage: function (page) {
+            this.$emit('')
+        }
 
     }
+});
+Vue.component("thread", {
+    template: `
+        <div>
+            <h2>{{title}}</h2>
+            <p>{{description}}</p>
+        </div>
+   
+        
+    `,
+    props: [
+        "title",
+        "description",
+        "index",
+        "idofthread"
+    ],
+    methods: {
+        
+         
+            
+    },
 });
 
 
@@ -20,7 +66,7 @@ var app = new Vue({
         registration: false,
         loginEmailInput: "",
         loginPasswordInput: "",
-
+        threadsArray: [],
         newNameInput: "",
         newEmailInput: "",
         newPasswordInput: "",
@@ -32,15 +78,18 @@ var app = new Vue({
             this.registration = true;
         },
         logStatus: function () {
-            if (this.getSession() == "logged in") {
-                
+            if (this.loggedIn == true) {
+                console.log("here")
+                this.page = "homepage";
             } else {
+                console.log("else")
                 
             }
         },
         logOut: function () {
             this.loggedIn = false
         },
+       
         // Get /session - Ask the server if we are logged in
         getSession: async function () {
             let response = await fetch(`${URL}/session`,{
@@ -140,11 +189,29 @@ var app = new Vue({
             }
             this.registration = false;
         },
+        //GET /thread's
+        getThreads: async function() {
+            let response = await fetch(`${URL}/thread`,{
+                method: "GET",
+                credentials: "include"
+            });
+            let data = await response.json();
+            // console.log(data)
+            this.threadsArray = data;
+
+        }
 
         // POST /user - create new user
     },
     created: function () {
         this.getSession();
+        // this.logStatus();
+        this.getThreads();
+        
+        
+    },
+    updated: function () {
         this.logStatus();
-    }
+    },
+    
 })

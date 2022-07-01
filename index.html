@@ -31,6 +31,23 @@
             <input placeholder="Password" v-model="newPasswordInput" type="password"><br>
             <button v-on:click="postUser()">Create Login</button>
         </div>
+        <div v-if="this.loggedIn == true" >
+            <div v-if="this.page == 'homepage'">
+                <div v-for="(thread, index) in threadsArray">
+                <!-- Container for threads with posts -->
+                    <homepage 
+                                v-bind:title="thread.name" 
+                                v-bind:description="thread.description"
+                                v-bind:index="index"
+                                v-bind:idofthread="thread._id"
+                                v-bind:page="page"></homepage>
+                </div>
+            </div>
+            <div v-if="this.page == 'thread'">
+                <!-- <thread v-bind: -->
+
+            </div> 
+        </div>
 
 
 
