@@ -1,61 +1,28 @@
 const URL = "https://forum2022.codeschool.cloud"
-Vue.component("homepage", {
-    template: `
-        <div>
-            <h2 v-on:click="getThread($event.target.value)">{{title}}</h2>
-            <p>{{description}}</p>
-        </div>
+// Vue.component("homepage", {
+//     template: `
+//         <div>
+//             <h2 v-on:click="getThread($event.target.value)">{{title}}</h2>
+//             <p>{{description}}</p>
+//         </div>
    
         
-    `,
-    props: [
-        "title",
-        "description",
-        "index",
-        "idofthread",
-        "page"
-    ],
-    methods: {
-         // GET selected thread by index from threads Array
-         getThread: async function(index) {
-            let threadID = this.idofthread;
-            let response = await fetch(`${URL}/thread/${threadID}`,{
-                method: "GET",
-                credentials: "include"
-            });
-            let data = await response.json();
-            // this.page = "thread"
-            console.log(data);
-            this.page = "thread";
-            
-        },
-        updatePage: function (page) {
-            this.$emit('')
-        }
-
-    }
-});
-Vue.component("thread", {
-    template: `
-        <div>
-            <h2>{{title}}</h2>
-            <p>{{description}}</p>
-        </div>
-   
-        
-    `,
-    props: [
-        "title",
-        "description",
-        "index",
-        "idofthread"
-    ],
-    methods: {
-        
+//     `,
+//     props: [
+//         "title",
+//         "description",
+//         "index",
+//         "idofthread",
+//         "page"
+//     ],
+//     methods: {
          
-            
-    },
-});
+//         updatePage: function (page) {
+//             this.$emit('')
+//         }
+
+//     }
+// });
 
 
 var app = new Vue({
@@ -70,6 +37,8 @@ var app = new Vue({
         newNameInput: "",
         newEmailInput: "",
         newPasswordInput: "",
+        lastClicked: {},
+        postBody: "",
 
     },
     methods: {
@@ -87,7 +56,41 @@ var app = new Vue({
             }
         },
         logOut: function () {
-            this.loggedIn = false
+            this.loggedIn = false;
+        },
+        // GET selected thread by index from threads Array
+        getThread: async function(threadObject) {
+            let threadID = threadObject._id;
+            let response = await fetch(`${URL}/thread/${threadID}`,{
+                method: "GET",
+                credentials: "include"
+            });
+            let data = await response.json();
+            // this.page = "thread"
+            console.log(data);
+
+            this.page = "thread";
+            this.lastClicked =  data;
+            
+        },
+        createPost: async function () {
+            let threadID = this.lastClicked._id
+            let thePostBody = this.postBody
+            let postBody = {
+                "body": thePostBody,
+                "thread_id" : threadID
+            }
+            let response = await fetch(`${URL}/post`,{
+                method: "POST",
+                body: JSON.stringify(postBody),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include"
+            });
+            this.postBody = "";
+            this.getThread(this.lastClicked);
+
         },
        
         // Get /session - Ask the server if we are logged in
@@ -103,6 +106,7 @@ var app = new Vue({
                 let data = await response.json();
                 console.log(data);
                 this.loggedIn = true;
+                this.page = "homepage";
             } else if (response.status == 401) {
                 //not logged in
                 console.log("not logged in");
@@ -139,6 +143,7 @@ var app = new Vue({
                 this.loginEmailInput = "";
                 this.loginPasswordInput = "";
                 this.loggedIn = false;
+                this.page = "homepage";
             } else if (response.status == 401) {
                 console.log("Unsuccessful Login Attempt");
 
@@ -210,8 +215,11 @@ var app = new Vue({
         
         
     },
-    updated: function () {
-        this.logStatus();
-    },
+    // computed: function () {
+    //     this.logStatus();
+    // }
+    // updated: function () {
+    //     this.logStatus();
+    // },
     
 })
