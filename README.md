@@ -18,4 +18,34 @@
         Bad login
         bad new email
         empty fields
+
+Resources:
+
+    /thread     GET/thread
+                GET/thread/_id
+                POST/thread
+                DELETE/thread
+
+    /post       POST/post
+                DELETE/post
+
+    
+Schema's:
+
+    thread: {
+        name: String,
+        description: String,
+        category: String
+    }
+
+    post: {
+        thread_id: String,
+        body: String
+    }
+
+    user: {
+        username: String,
+        fullname: String,
+        password: String
+    }
         

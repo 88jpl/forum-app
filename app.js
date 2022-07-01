@@ -73,6 +73,7 @@ var app = new Vue({
             this.lastClicked =  data;
             
         },
+        //create post on thread that was last clicked
         createPost: async function () {
             let threadID = this.lastClicked._id
             let thePostBody = this.postBody
